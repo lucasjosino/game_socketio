@@ -6,8 +6,8 @@ var socket = require('socket.io')(http);
 
 var position = {
   x1: 0,
-  y1: 200, 
-  x2: 675,
+  y1: 200,
+  x2: 685,
   y2: 200,
   x: 5,
   y: 20
@@ -28,7 +28,7 @@ socket.on('connection', async function(socketClient){
 
   socketClient.join('room_player');
   const clientsInRoom = await socket.in('room_player').allSockets()
-  console.log(clientsInRoom.size);
+
   if(clientsInRoom.size > 1){
     socketClient.emit('room',2);
   }
@@ -49,9 +49,15 @@ socket.on('connection', async function(socketClient){
 function updatePosition(){
 
   if (position.x >= 700){
+    if (!(position.y >= position.y2 && position.y <= position.y2 + 150)){
+      socket.emit('gameOver',2);
+    }
     positionBallFlag.x = false;
   }
   if (position.x <= 0){
+    if (!(position.y >= position.y1 && position.y <= position.y1 + 150)){
+      socket.emit('gameOver',1);
+    }
     positionBallFlag.x = true;
   }
   if (position.y >= 500){
@@ -62,14 +68,14 @@ function updatePosition(){
   }
 
   if (positionBallFlag.x)
-    position.x += 10;
+    position.x += 5;
   else
-    position.x -= 10;
+    position.x -= 5;
     
   if (positionBallFlag.y)
-    position.y += 10;
+    position.y += 5;
   else
-    position.y -= 10;
+    position.y -= 5;
   // if (positionBallFlag.y)
   //   position.y += 0.0001;
   // else

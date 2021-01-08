@@ -36,14 +36,12 @@
                             let position = {};
                             const keyName = event.key;
                             if (keyName == 'ArrowUp'){
-                                position.y2 = -50;
+                                position.y2 = -20;
                                 socket.emit('set_position',position); 
-                                console.log('player2_apertou');
                             }
                             if (keyName == 'ArrowDown'){
-                                position.y2 = +50;
+                                position.y2 = +20;
                                 socket.emit('set_position',position); 
-                                console.log('player2_apertou');
                             }
                         });
                     }
@@ -51,6 +49,10 @@
 
             socket.on('updatePosition', function(position){
                 draw(position.x1,position.x2,position.y1,position.y2, position.x, position.y);
+            });
+
+            socket.on('gameOver', function(player){
+                alert(player +" perdeu!");
             });
 
             function draw(x1,x2,y1,y2,x,y){
@@ -61,10 +63,10 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.beginPath();
                     ctx.fillStyle = "rgb(200,0,0)";
-                    ctx.fillRect (x1, y1, 25, 100);
+                    ctx.fillRect (x1, y1, 15, 150);
 
                     ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
-                    ctx.fillRect (x2, y2, 25, 100);
+                    ctx.fillRect (x2, y2, 15, 150);
 
                     ctx.fillStyle = "rgb(200,0,0)";
                     ctx.arc(x, y, 7, 0, 2 * Math.PI);
