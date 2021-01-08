@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.5/socket.io.js" integrity="sha512-2rUSTSAeOO02jF6eBqENNqPs1EohenJ5j+1dgDPdXSLz9nOlrr8DJk4zW/lDy8rjhGCSonW3Gx812XJQIKZKJQ==" crossorigin="anonymous"></script>
+        <title></title>
+        <script type="text/javascript">
+
+            // conexão com o servidor
+            var socket = io('http://localhost:4321');
+
+            socket.on('connect', function(){})
+
+            socket.on('room', function(player){
+
+                    if (player == 1) {
+                        document.addEventListener ('keydown', (event) => {
+                            let position = {};
+                            const keyName = event.key;
+                            if (keyName == 'ArrowUp'){
+                                position.y1 = -50;
+                                socket.emit('set_position',position); 
+                                console.log('player1_apertou');
+                            }
+                            if (keyName == 'ArrowDown'){
+                                position.y1 = +50;
+                                socket.emit('set_position',position); 
+                                console.log('player1_apertou');
+                            }
+                        });
+                    }
+                    else {
+                        // gerir os controles 
+                        document.addEventListener ('keydown', (event) => {
+                            let position = {};
+                            const keyName = event.key;
+                            if (keyName == 'ArrowUp'){
+                                position.y2 = -50;
+                                socket.emit('set_position',position); 
+                                console.log('player2_apertou');
+                            }
+                            if (keyName == 'ArrowDown'){
+                                position.y2 = +50;
+                                socket.emit('set_position',position); 
+                                console.log('player2_apertou');
+                            }
+                        });
+                    }
+            })
+
+            socket.on('updatePosition', function(position){
+                draw(position.x1,position.x2,position.y1,position.y2, position.x, position.y);
+            });
+
+            function draw(x1,x2,y1,y2,x,y){
+                var canvas = document.getElementById('tutorial');
+                if (canvas.getContext){
+                    var ctx = canvas.getContext('2d');
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.beginPath();
+                    ctx.fillStyle = "rgb(200,0,0)";
+                    ctx.fillRect (x1, y1, 25, 100);
+
+                    ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+                    ctx.fillRect (x2, y2, 25, 100);
+
+                    ctx.fillStyle = "rgb(200,0,0)";
+                    ctx.arc(x, y, 7, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <canvas id="tutorial" width="700" height="500" style="border: 1px solid;"></canvas>
+    </body>
+</html>
